@@ -3,13 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {User, users} from './components/data/users'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+export const UsersContext = React.createContext<{ users:User[], deletedUsers: User[], newUsers : User[]}>({ users: [], deletedUsers: [], newUsers:[]})
+
 root.render(
   <React.StrictMode>
+    <UsersContext.Provider value={{
+      users: users,
+      deletedUsers:[],
+      newUsers:[]
+
+      }}>
     <App />
+    </UsersContext.Provider>
   </React.StrictMode>
 );
 
