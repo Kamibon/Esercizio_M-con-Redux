@@ -33,7 +33,21 @@ export default function Users() {
     }
     retrieveData()
     
+     
    }, [])
+
+   useEffect(()=>{
+    if(!searchText.length){
+      setFiltered(users)
+     
+      return
+  }
+    setFiltered(users.filter(el=> {
+          
+      return  currentFilter === "BirthDate"?  el[currentFilter].getFullYear()<parseInt(searchText) :
+       el[currentFilter].includes(searchText)})
+    )
+   }, [searchText])
 
    
    const deleteUser = (idToDelete:string)=>{
@@ -50,43 +64,16 @@ export default function Users() {
         setOpenPopup(open)
        }
 
-   const handleSearch = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
    
-    setSearchText( e.target.value)
-    if(!e.target.value.length){
-        setFiltered(users)
-       
-        return
-    }
-        
-         setFiltered(users.filter(el=> {
-          
-         return  currentFilter === "BirthDate"?  el[currentFilter].getFullYear()<parseInt(searchText) :
-          el[currentFilter].includes(searchText)})
-         
-        )
-         
-   }
-
-   const handleSelect = ( event:SelectChangeEvent)=>{
-         setCurrentFilter(event.target.value  )
-         setFiltered(users.filter(el=>{
-         
-        return  currentFilter === "BirthDate"? el["BirthDate"].getFullYear()<parseInt(searchText) :
-          el[currentFilter].includes(searchText) })
-         
-        )
-       
-   }
 
   return (
     <Box>
     <Typography fontWeight={'extrabold'}>I TUOI UTENTI</Typography>
     
     <FormControl>
-    <TextField name='search' label="Ricerca" value={searchText} onChange={(e)=>handleSearch(e)}></TextField>
+    <TextField name='search' label="Ricerca" value={searchText} onChange={(e)=>setSearchText(e.target.value)}></TextField>
     <InputLabel id = "usersFilter"> </InputLabel>
-    <Select value={currentFilter}  labelId='usersFilter' onChange={e=>handleSelect(e)}>
+    <Select value={currentFilter}  labelId='usersFilter' onChange={e=>setCurrentFilter(e.target.value)}>
        {filters.map(el=><MenuItem key={el} value={el}  >{el}</MenuItem>)}
     </Select>
     </FormControl>

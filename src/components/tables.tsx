@@ -14,9 +14,9 @@ export default function Tables() {
     <div>
       
              
-              <MyTable title='Utenti in ordine di anzianità' headings={["Utente", "Età"]} data ={temp.sort((a,b)=> a.BirthDate.getFullYear() -b.BirthDate.getFullYear())}></MyTable>
-              <MyTable title='Nuovi utenti' headings={["Nome Utente", "Indirizzo"] } data={newUsers}></MyTable>
-              <MyTable title='Utenti Eliminati' headings={["Utente Eliminato"]} data={deletedUsers}></MyTable>
+              <MyTable title='Utenti in ordine di anzianità' headings={["Utente", "Età"]} data ={temp.sort((a,b)=> a.BirthDate.getFullYear() -b.BirthDate.getFullYear())} information='Age'></MyTable>
+              <MyTable title='Nuovi utenti' headings={["Nome Utente", "Indirizzo"] } data={newUsers} information='Address'></MyTable>
+              <MyTable title='Utenti Eliminati' headings={["Utente Eliminato", "Età"]} data={deletedUsers} information='Age'></MyTable>
 
              
              

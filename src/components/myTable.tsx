@@ -2,7 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { User } from './data/users'
 
 //
-export default function MyTable({title, headings, data} : {title:string, headings:string[], data:User[]}) {
+export default function MyTable({title, headings, data, information} : {title:string, headings:string[], data:User[], information:string}) {
   return (
     <div>
         <Typography fontWeight={'bold'}>{title}</Typography>
@@ -16,8 +16,8 @@ export default function MyTable({title, headings, data} : {title:string, heading
         <TableBody>
      {data.map(el=><TableRow key={el.id}>
       <TableCell>{el.Name + " " + el.Surname}</TableCell>
-      <TableCell>{ 2024- el.BirthDate.getFullYear()}</TableCell>
-
+      <TableCell>{ information === "Age"? (2024-el.BirthDate.getFullYear()).toString(): el[information]}</TableCell>
+      
       </TableRow>)}
       </TableBody>
          </Table>
