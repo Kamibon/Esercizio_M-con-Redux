@@ -1,7 +1,8 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import React, { useContext } from 'react'
+import {  Typography } from '@mui/material'
+import  { useContext } from 'react'
 import { UsersContext } from '..'
 import { LineChart, PieChart } from '@mui/x-charts'
+import MyTable from './myTable'
 
 
 export default function Tables() {
@@ -11,62 +12,15 @@ export default function Tables() {
 
   return (
     <div>
-        <TableContainer  sx={{ maxWidth: 800, margin: '5%'}} component={Paper}>
-           <Table >
-             <TableHead>
-                <TableRow >
-                  <TableCell>User</TableCell>
-                   <TableCell>Age</TableCell>
-                </TableRow>
-              </TableHead>
-            <TableBody>
-         {temp.sort((a,b)=> a.BirthDate.getFullYear() -b.BirthDate.getFullYear()).map(el=><TableRow key={el.id}>
-          <TableCell>{el.Name + " " + el.Surname}</TableCell>
-          <TableCell>{ 2024- el.BirthDate.getFullYear()}</TableCell>
-
-          </TableRow>)}
-          </TableBody>
-             </Table>
-             </TableContainer>
-
-
-             <TableContainer  sx={{ maxWidth: 800, margin: '5%'}} component={Paper}>
-           <Table >
-             <TableHead>
-                <TableRow >
-                  <TableCell>New User</TableCell>
-                   <TableCell>Address</TableCell>
-                </TableRow>
-              </TableHead>
-            <TableBody>
-         {newUsers.map(el=><TableRow key={el.id}>
-          <TableCell>{el.Name + " " + el.Surname}</TableCell>
-          <TableCell>{ el.Address}</TableCell>
-
-          </TableRow>)}
-          </TableBody>
-             </Table>
-             </TableContainer>
-
-             <TableContainer  sx={{ maxWidth: 800, margin: '5%'}} component={Paper}>
-           <Table >
-             <TableHead>
-                <TableRow >
-                  <TableCell>Deleted User</TableCell>
-                 
-                </TableRow>
-              </TableHead>
-            <TableBody>
-         {deletedUsers.map(el=><TableRow key={el.id}>
-          <TableCell>{el.Name + " " + el.Surname}</TableCell>
-         
-
-          </TableRow>)}
-          </TableBody>
-             </Table>
-             </TableContainer>
+      
              
-             <Typography>Dati sugli anni di nascita</Typography>
+              <MyTable title='Utenti in ordine di anzianità' headings={["Utente", "Età"]} data ={temp.sort((a,b)=> a.BirthDate.getFullYear() -b.BirthDate.getFullYear())}></MyTable>
+              <MyTable title='Nuovi utenti' headings={["Nome Utente", "Indirizzo"] } data={newUsers}></MyTable>
+              <MyTable title='Utenti Eliminati' headings={["Utente Eliminato"]} data={deletedUsers}></MyTable>
+
+             
+             
+             <Typography fontWeight={'bold'}>Dati sugli anni di nascita</Typography>
              <PieChart series={[
                    {
                      data: [
@@ -76,11 +30,10 @@ export default function Tables() {
                            ],
                    },
                       ]}   
-  width={400}
-  height={200}>
-
-  </PieChart>
-  <Typography>Dati sulle nascite mensili</Typography>
+              width={400}
+              height={200}>
+             </PieChart>
+  <Typography fontWeight={'bold'}>Dati sulle nascite mensili</Typography>
   
   <LineChart xAxis={[{ data: users.map(el=>el.id) }]} series={[
     {

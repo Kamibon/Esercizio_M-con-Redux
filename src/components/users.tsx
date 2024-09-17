@@ -81,7 +81,7 @@ export default function Users() {
 
   return (
     <Box>
-    <Typography fontWeight={'bold'}>I TUOI UTENTI</Typography>
+    <Typography fontWeight={'extrabold'}>I TUOI UTENTI</Typography>
     
     <FormControl>
     <TextField name='search' label="Ricerca" value={searchText} onChange={(e)=>handleSearch(e)}></TextField>
@@ -94,7 +94,7 @@ export default function Users() {
     <br/>
     <Button sx={{margin:2}} onClick={()=>setOpenPopup(true)} >Aggiungi utente</Button>
     
-    <PopupWindow togglePopup={togglePopup} isOpen = {openPopup} ></PopupWindow>
+    <PopupWindow togglePopup={togglePopup} isOpen = {openPopup} setFiltered={setFiltered} ></PopupWindow>
     <Stack spacing={2}>
     
     {filtered.map(el=><UserCard key={el.id} user = {el} deleteUser= {deleteUser} ></UserCard>)}

@@ -3,13 +3,14 @@ import React, { useContext, useState } from 'react'
 import {User} from './data/users'
 import { UsersContext } from '..'
 
-export default  function PopupWindow({isOpen, togglePopup}: {isOpen: boolean, togglePopup: Function}) {
+export default  function PopupWindow({isOpen, togglePopup, setFiltered}: {isOpen: boolean, togglePopup: Function, setFiltered: Function}) {
 
-    const {users, newUsers} = useContext(UsersContext)
-    const [data, setData] = useState<User>({ id: (users.length ).toString() , Name:"", Surname:"", BirthDate: new Date(1950, 1,1), CF:"", Address:""})
+    const {users, deletedUsers, newUsers} = useContext(UsersContext)
+    
+    const [data, setData] = useState<User>({ id: (users.length + deletedUsers.length).toString() , Name:"", Surname:"", BirthDate: new Date(1950, 1,1), CF:"", Address:""})
 
      const sendData = async()=>{
-    
+     console.log(data.id)
       try {
         await fetch('http://miobackend.com/users', {
           method:'POST',
@@ -23,7 +24,9 @@ export default  function PopupWindow({isOpen, togglePopup}: {isOpen: boolean, to
       }
       users.push(data)
       newUsers.push(data)
-      setData({...data, id: (parseInt(data.id) + 1).toString()})
+      
+      setData({...data, id: (users.length + deletedUsers.length).toString() })
+      setFiltered(users)
       togglePopup(false)
         
     }
