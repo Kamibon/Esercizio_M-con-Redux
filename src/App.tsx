@@ -14,15 +14,7 @@ function App() {
 
 
   const [section, setSection] = useState<"Dashboard"|"Utenti">('Dashboard')
- 
- 
-
-  
-
- 
-
- 
- const swapSection = (sectionName: "Dashboard"|"Utenti")=>{
+  const swapSection = (sectionName: "Dashboard"|"Utenti")=>{
        setSection(sectionName)
  }
 

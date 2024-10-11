@@ -13,7 +13,7 @@ export default function Dashboard() {
     <Container>
       <Typography fontWeight={'bold'}>DASHBOARD</Typography>
       <Divider></Divider>
-    <Tables></Tables>
+      <Tables></Tables>
     
 
     </Container>

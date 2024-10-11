@@ -1,93 +1,82 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
-import PopupWindow from './popupWindow'
 
-import UserCard from './userCard'
-import { UsersContext } from '..'
+import { Box, Typography, FormControl, TextField, InputLabel, Select, MenuItem, Button, Stack } from '@mui/material';
+import UserCard from './userCard';
+import PopupWindow from './popupWindow';
+import  {  Suspense, useEffect, useState } from 'react'
+import {  useAppDispatch, useAppSelector } from '../redux/store'
+import {  getData, resetCreationStatusIdle, resetDeleteUserStatus, resetEditUserStatusIdle } from './services/slice'
+import Alerts from './alerts'
+
 
 export default function Users() {
-
-    const filters = ['Surname', 'BirthDate', 'Address']
-
-    const [openPopup, setOpenPopup] = useState(false)
-    const [currentFilter, setCurrentFilter] = useState("Surname")
-    const [searchText, setSearchText] = useState("")
+    const filters = ['name', 'username'];
     
-    const { users, deletedUsers}  = useContext(UsersContext)
-    const [filtered, setFiltered] = useState(users)
-   
-   
+    const [openPopup, setOpenPopup] = useState(false);
+    const [currentFilter, setCurrentFilter] = useState("name");
+    const [searchText, setSearchText] = useState("");
     
+    const users = useAppSelector(state => state.users.users);
+    const { getUsersStatus, deleteUserStatus, createUserStatus, editUserStatus } = useAppSelector(state => state.users);
+    const [filtered, setFiltered] = useState(users);
+    const dispatch = useAppDispatch();
     
-   useEffect(()=>{
-    async function retrieveData(){
-      try {
-       const response = await fetch('http://miobackend.com/users');
-       const data = await response.json()
-       return data
-       
-      } catch (error) {
-        console.log(error)
-      }
+    useEffect(() => {
+        if (!searchText.length) {
+            setFiltered(users);
+            return;
+        }
+        setFiltered(users.filter(el => el[currentFilter].includes(searchText)));
+    }, [searchText, users, currentFilter]);
     
-    }
-    retrieveData()
+    useEffect(() => {
+        if (deleteUserStatus === "successfully") {
+            dispatch(getData());
+        }
+        setTimeout(() => {
+            dispatch(resetDeleteUserStatus());
+        }, 5000);
+    }, [deleteUserStatus, dispatch]);
     
-     
-   }, [])
-
-   useEffect(()=>{
-    if(!searchText.length){
-      setFiltered(users)
-     
-      return
-  }
-    setFiltered(users.filter(el=> {
-          
-      return  currentFilter === "BirthDate"?  el[currentFilter].getFullYear()<parseInt(searchText) :
-       el[currentFilter].includes(searchText)})
-    )
-   }, [searchText])
-
-   
-   const deleteUser = (idToDelete:string)=>{
-    fetch('http://miobackend.com/users/' + idToDelete, {
-        method:'DELETE'
-    }).catch(e=>console.log(e))
-   
-    deletedUsers.push(...users.splice(parseInt(idToDelete),1))
-    setFiltered( prev=> {return prev.filter((el)=>el.id!==idToDelete)})
+    useEffect(() => {
+        setTimeout(() => {
+            dispatch(resetCreationStatusIdle());
+        }, 5000);
+    }, [createUserStatus, dispatch]);
     
- }
-
-    const togglePopup= ( open:boolean)=>{
-        setOpenPopup(open)
-       }
-
-   
-
-  return (
-    <Box>
-    <Typography fontWeight={'extrabold'}>I TUOI UTENTI</Typography>
+    useEffect(() => {
+        setTimeout(() => {
+            dispatch(resetEditUserStatusIdle());
+        }, 5000);
+    }, [editUserStatus, dispatch]);
     
-    <FormControl>
-    <TextField name='search' label="Ricerca" value={searchText} onChange={(e)=>setSearchText(e.target.value)}></TextField>
-    <InputLabel id = "usersFilter"> </InputLabel>
-    <Select value={currentFilter}  labelId='usersFilter' onChange={e=>setCurrentFilter(e.target.value)}>
-       {filters.map(el=><MenuItem key={el} value={el}  >{el}</MenuItem>)}
-    </Select>
-    </FormControl>
-
-    <br/>
-    <Button sx={{margin:2}} onClick={()=>setOpenPopup(true)} >Aggiungi utente</Button>
+    const togglePopup = (open: boolean) => {
+        setOpenPopup(open);
+    };
     
-    <PopupWindow togglePopup={togglePopup} isOpen = {openPopup} setFiltered={setFiltered} ></PopupWindow>
-    <Stack spacing={2}>
+    if (getUsersStatus === "loading") return <Suspense> Caricamento utenti...</Suspense>;
     
-    {filtered.map(el=><UserCard key={el.id} user = {el} deleteUser= {deleteUser} ></UserCard>)}
-    </Stack>
-    </Box>
-  )
+    return (
+        <Box>
+            <Alerts></Alerts>
+            <Typography fontWeight={'bold'}>I TUOI UTENTI</Typography>
+            
+            <FormControl>
+                <TextField name='search' label="Ricerca" value={searchText} onChange={(e) => setSearchText(e.target.value)}></TextField>
+                <InputLabel id="usersFilter"> </InputLabel>
+                <Select value={currentFilter} labelId='usersFilter' onChange={e => setCurrentFilter(e.target.value)}>
+                    {filters.map(el => <MenuItem key={el} value={el}>{el}</MenuItem>)}
+                </Select>
+            </FormControl>
+            
+            <br />
+            <Button aria-hidden={false} sx={{ margin: 2 }} onClick={() => setOpenPopup(true)}>Aggiungi utente</Button>
+            
+            <PopupWindow togglePopup={togglePopup} isOpen={openPopup}></PopupWindow>
+            <Stack spacing={2}>
+                {filtered.map(el => <UserCard key={el.id} user={el}></UserCard>)}
+            </Stack>
+        </Box>
+    );
 }
 
  

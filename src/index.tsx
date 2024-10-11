@@ -3,24 +3,25 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {User, users} from './components/data/users'
+
+import { store } from './redux/store';
+import { getData } from './components/services/slice';
+import { Provider } from 'react-redux';
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-export const UsersContext = React.createContext<{ users:User[], deletedUsers: User[], newUsers : User[]}>({ users: [], deletedUsers: [], newUsers:[]})
+//export const UsersContext = React.createContext<{ users:User[], deletedUsers: User[], newUsers : User[]}>({ users: [], deletedUsers: [], newUsers:[]})
+
+store.dispatch( getData())
 
 root.render(
   <React.StrictMode>
-    <UsersContext.Provider value={{
-      users: users,
-      deletedUsers:[],
-      newUsers:[]
-
-      }}>
+    <Provider store={store}>
     <App />
-    </UsersContext.Provider>
+    </Provider>
   </React.StrictMode>
 );
 
